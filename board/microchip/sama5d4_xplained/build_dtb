@@ -1,0 +1,7 @@
+SRC=at91-sama5d4_xplained.dts
+TMP=at91-sama5d4_xplained.tmp.dts
+DST=at91-sama5d4_xplained.dtb
+
+cpp -nostdinc -I include -undef -x assembler-with-cpp $SRC > $TMP
+dtc -O dtb -b 0 -o $DST $TMP
+rm $TMP

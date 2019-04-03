@@ -1,0 +1,80 @@
+/ {
+
+sound {
+        compatible = "simple-audio-card";
+        simple-audio-card,name = "soundcard"; 
+        simple-audio-card,format = "i2s";
+        simple-audio-card,bitclock-master = <&dailink0_slave>;
+        simple-audio-card,frame-master = <&dailink0_slave>;
+        simple-audio-card,mclk-fs = <256>;
+
+        status = "okay";
+        simple-audio-card,widgets =
+                "Microphone", "Mic Jack",
+                "Line", "Line In",
+                "Line", "Line Out",
+                "Speaker", "Speaker",
+                "Headphone", "Headphone Jack";
+        simple-audio-card,routing =
+                "Headphone Jack", "HP_L",
+                "Headphone Jack", "HP_R",
+                "Speaker", "SPK_LP",
+                "Speaker", "SPK_LN",
+                "LINPUT1", "Mic Jack",
+                "LINPUT3", "Mic Jack",
+                "RINPUT1", "Mic Jack",
+                "RINPUT2", "Mic Jack";
+
+        simple-audio-card,cpu {
+            sound-dai = <&ssc1>;
+        };
+
+        dailink0_slave: simple-audio-card,codec {
+            sound-dai = <&wm8960>;
+            clocks = <&wm8960_mclk>;
+            clock-names = "mclk";
+        };
+
+        wm8960_mclk: wm8960_mclk {
+            compatible = "fixed-clock";
+            #clock-cells = <0>;
+            /*clock-frequency = <12288000>;*/
+            clock-frequency = <24000000>;
+            system-clock-frequency = <24000000>;
+        };
+};
+};
+
+&ssc0 {
+    status = "disabled";
+};
+
+&ssc1 {
+    #sound-dai-cells = <0>;
+    status = "okay";
+};
+
+&spi0 {
+    status = "disabled";
+};
+
+&i2c0 {
+        #address-cells = <1>;
+        #size-cells = <0>;
+        status = "okay";
+
+        wm8960: wm8960@1a {
+            compatible = "wlf,wm8960";
+            reg = <0x1a>;
+            #sound-dai-cells = <0>;
+            wlf,shared-lrclk;
+            clk,pll;
+
+            /*clocks = <&twi0_clk>;*/
+            /*clock-names = "twi0_clk";*/
+            /*wlf,shared-lrclk;*/
+            /*AVDD-supply = <&vcc_3v3_reg>;*/
+       };
+
+};
+k
